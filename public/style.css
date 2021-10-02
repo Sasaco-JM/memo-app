@@ -1,0 +1,51 @@
+header {
+  display: flex;
+}
+
+.container {
+  background-color: lightgray;
+  border-radius: 15px;
+  margin: 0 5%;
+  padding: 2%;
+}
+
+.button {
+  background-color: #424242;
+  border: solid 1px black;
+  color: white;
+  box-shadow: inset 0px 1px gray;
+
+  height: 35px;
+  width: 160px;
+  border-radius: 5px;
+  cursor: pointer;
+
+  display: block;
+}
+
+.buttons {
+  display: flex;
+}
+
+.add-button {
+  background-color: #424242;
+  border: solid 1px black;
+  color: white;
+  box-shadow: inset 0px 1px gray;
+
+  height: 35px;
+  width: 160px;
+  border-radius: 5px;
+  cursor: pointer;
+
+  display: block;
+
+  margin: 5% 0 5% auto;
+}
+
+a {
+  text-decoration: none;
+}
+a:visited {
+  color: inherit;
+}
