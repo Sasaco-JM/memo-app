@@ -6,14 +6,16 @@ require 'json'
 
 # include ERB::Util
 
-$path = './json/memo.json'
-$json_data = File.open($path) { |file| JSON.load(file) }
+# $json_path = './json/memo.json'
+# $json_data = File.open($json_path) { |file| JSON.parse(file.read) }
 
 # ルーティング
 # ページ表示
 get '/' do
+  json_data = load_json
+
   @title = 'Top'
-  @memos = $json_data
+  @memos = json_data
 
   erb :index
 end
@@ -42,15 +44,14 @@ end
 # データ操作
 # 保存ボタン
 post '/memo' do
-  $json_data = {} if $json_data.nil?
-  id = get_max_id
+  json_data = load_json
+  json_data = {} if json_data.nil?
+  id = calc_max_id
 
   new_memo = create_memo_hash(params)
 
-  $json_data[id] = new_memo
-  File.open($path, 'w') { |file| JSON.dump($json_data, file) }
-
-  load_json
+  json_data[id] = new_memo
+  File.open('./json/memo.json', 'w') { |file| JSON.dump(json_data, file) }
 
   redirect '/'
   erb :index
@@ -59,12 +60,11 @@ end
 # 変更ボタン
 patch '/memo/:id' do
   id = params[:id].to_s
+  json_data = load_json
   new_memo = create_memo_hash(params)
-  $json_data[id] = new_memo
+  json_data[id] = new_memo
 
-  File.open($path, 'w') { |file| JSON.dump($json_data, file) }
-
-  load_json
+  File.open('./json/memo.json', 'w') { |file| JSON.dump(json_data, file) }
 
   redirect '/'
   erb :index
@@ -72,20 +72,20 @@ end
 
 # 削除ボタン
 delete '/memo/:id' do
-  $json_data.delete(params[:id].to_s)
+  json_data = load_json
+  json_data.delete(params[:id].to_s)
 
-  File.open($path, 'w') { |file| JSON.dump($json_data, file) }
-
-  load_json
+  File.open('./json/memo.json', 'w') { |file| JSON.dump(json_data, file) }
 
   redirect '/'
   erb :index
 end
 
 # メソッド
-def get_max_id
+def calc_max_id
   id = 0
-  $json_data.each { |k, _v| id = k.to_i if id <= k.to_i }
+  json_data = load_json
+  json_data.each { |k, _v| id = k.to_i if id <= k.to_i }
   (id += 1).to_s
 end
 
@@ -97,11 +97,12 @@ def create_memo_hash(params)
 end
 
 def get_memo(id)
-  $json_data[id]
+  json_data = load_json
+  json_data[id]
 end
 
 def load_json
-  $json_data = File.open($path) { |file| JSON.load(file) }
+  File.open('./json/memo.json') { |file| JSON.parse(file.read) }
 end
 
 def escape_params(text)
@@ -119,3 +120,5 @@ end
 
 # jsonファイルから特定のメモだけ読み出す方法
 # →解決
+
+# 問題：rubocopでグローバル変数を警告される。
