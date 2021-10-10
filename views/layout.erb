@@ -16,7 +16,7 @@
         </div>
       </a>
       <% if @title == "Top" %>
-      <input type="button" onclick="location.href='/memo' " value="追加" class="add-button">
+      <a href="/memos" class="add-button">追加</a>
       <% end %>
     </header>
     <%= yield %>

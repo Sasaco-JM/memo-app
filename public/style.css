@@ -23,6 +23,29 @@ header {
   display: block;
 }
 
+.button-a {
+  background-color: #424242;
+  border: solid 1px black;
+  color: white;
+  box-shadow: inset 0px 1px gray;
+
+  height: 33px;
+  width: 158px;
+  border-radius: 5px;
+  cursor: pointer;
+
+  /* display: block; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.button-a:visited,
+.add-button:visited {
+  color: white;
+}
+
 .buttons {
   display: flex;
 }
@@ -41,11 +64,19 @@ header {
   display: block;
 
   margin: 5% 0 5% auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 a {
   text-decoration: none;
 }
+
 a:visited {
   color: inherit;
+}
+
+p {
+  white-space: pre-wrap;
 }

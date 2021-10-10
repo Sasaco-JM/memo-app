@@ -4,11 +4,6 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
 
-# include ERB::Util
-
-# $json_path = './json/memo.json'
-# $json_data = File.open($json_path) { |file| JSON.parse(file.read) }
-
 # ルーティング
 # ページ表示
 get '/' do
@@ -21,12 +16,12 @@ get '/' do
 end
 
 # 追加ボタン
-get '/memo' do
+get '/memos' do
   @title = 'new memo'
   erb :new
 end
 
-get '/memo/:id' do
+get '/memos/:id' do
   @memo = get_memo(params[:id])
   @id = params[:id]
   @title = 'show memo'
@@ -34,7 +29,7 @@ get '/memo/:id' do
 end
 
 # 編集ボタン
-get '/memo/edit/:id' do
+get '/memos/edit/:id' do
   @memo = get_memo(params[:id])
   @id = params[:id]
   @title = 'edit memo'
@@ -43,7 +38,7 @@ end
 
 # データ操作
 # 保存ボタン
-post '/memo' do
+post '/memos' do
   json_data = load_json
   json_data = {} if json_data.nil?
   id = calc_max_id
@@ -58,7 +53,7 @@ post '/memo' do
 end
 
 # 変更ボタン
-patch '/memo/:id' do
+patch '/memos/:id' do
   id = params[:id].to_s
   json_data = load_json
   new_memo = create_memo_hash(params)
@@ -71,7 +66,7 @@ patch '/memo/:id' do
 end
 
 # 削除ボタン
-delete '/memo/:id' do
+delete '/memos/:id' do
   json_data = load_json
   json_data.delete(params[:id].to_s)
 
@@ -90,10 +85,7 @@ def calc_max_id
 end
 
 def create_memo_hash(params)
-  title = escape_params(params[:title])
-  content = escape_params(params[:content])
-
-  { title: title, content: content }
+  { title: params[:title], content: params[:content] }
 end
 
 def get_memo(id)
@@ -105,8 +97,9 @@ def load_json
   File.open('./json/memo.json') { |file| JSON.parse(file.read) }
 end
 
-def escape_params(text)
-  Rack::Utils.escape_html(text)
+helpers do
+  include Rack::Utils
+  alias_method :esc, :escape_html
 end
 
 # 問題点

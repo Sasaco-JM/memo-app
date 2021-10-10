@@ -1,18 +1,18 @@
 <div class="memo">
   <div class="titile">
-    <h2> <%= @memo["title"] %> </h2>
+    <h2> <%= esc(@memo["title"]) %> </h2>
   </div>
 
   <div class="content">
-    <h2><%= @memo["content"] %> </h2>
+    <p><%= esc(@memo["content"]) %> </p>
   </div>
 </div>
 <div class="buttons">
   <div>
-    <input type="button" onclick="location.href='/memo/edit/<%= @id %>' " value="変更" class="button">
+    <a href="/memos/edit/<%= @id %>" class="button-a">変更</a>
   </div>
   <div>
-    <form method="post" action="/memo/<%= @id %>">
+    <form method="post" action="/memos/<%= @id %>">
       <input type="hidden" name="_method" value="DELETE">
       <input type="submit" value="削除" class="button">
     </form>

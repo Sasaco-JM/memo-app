@@ -3,8 +3,8 @@
   <ul>
     <% @memos.each do |k,v| %>
     <li>
-      <a href="/memo/<%= k %>">
-        <%= v["title"] %>
+      <a href="/memos/<%= k %>">
+        <%= esc(v["title"]) %>
       </a>
     </li>
     <% end %>
