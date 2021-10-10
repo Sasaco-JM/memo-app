@@ -14,12 +14,10 @@ header {
   border: solid 1px black;
   color: white;
   box-shadow: inset 0px 1px gray;
-
   height: 35px;
   width: 160px;
   border-radius: 5px;
   cursor: pointer;
-
   display: block;
 }
 
@@ -28,13 +26,10 @@ header {
   border: solid 1px black;
   color: white;
   box-shadow: inset 0px 1px gray;
-
   height: 33px;
   width: 158px;
   border-radius: 5px;
   cursor: pointer;
-
-  /* display: block; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,9 +55,6 @@ header {
   width: 160px;
   border-radius: 5px;
   cursor: pointer;
-
-  display: block;
-
   margin: 5% 0 5% auto;
   display: flex;
   align-items: center;
