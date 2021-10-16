@@ -29,7 +29,7 @@ get '/memos/:id' do
 end
 
 # 編集ボタン
-get '/memos/edit/:id' do
+get '/memos/:id/edit' do
   @memo = get_memo(params[:id])
   @id = params[:id]
   @title = 'edit memo'
