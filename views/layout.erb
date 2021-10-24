@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf8">
+  <title><%= @title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <a href="/">
+        <div>
+          <h1> メモアプリ</h1>
+        </div>
+      </a>
+      <% if @title == "Top" %>
+      <a href="/memos" class="add-button">追加</a>
+      <% end %>
+    </header>
+    <%= yield %>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+<% if not @memos.nil? and not @memos.empty? %>
+<div>
+  <ul>
+    <% @memos.each do |k,v| %>
+    <li>
+      <a href="/memos/<%= k %>">
+        <%= esc(v["title"]) %>
+      </a>
+    </li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
