@@ -1,13 +1,12 @@
-<% if not @memos.nil? and not @memos.empty? %>
+
 <div>
   <ul>
-    <% @memos.each do |k,v| %>
+    <% @memos.each do |row| %>
     <li>
-      <a href="/memos/<%= k %>">
-        <%= esc(v["title"]) %>
+      <a href="/memos/<%= row["id"] %>">
+        <%= esc(row["title"]) %>
       </a>
     </li>
     <% end %>
   </ul>
 </div>
-<% end %>

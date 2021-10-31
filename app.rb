@@ -2,15 +2,15 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require 'json'
+require 'pg'
 
 # ルーティング
 # ページ表示
 get '/' do
-  json_data = load_json
-
   @title = 'Top'
-  @memos = json_data
+
+  cmd = 'SEL_ALL'
+  @memos = db_exec(cmd, params)
 
   erb :index
 end
@@ -22,31 +22,28 @@ get '/memos' do
 end
 
 get '/memos/:id' do
-  @memo = get_memo(params[:id])
-  @id = params[:id]
   @title = 'show memo'
+
+  cmd = 'SEL'
+  @memo = db_exec(cmd, params)
+
   erb :detail
 end
 
 # 編集ボタン
 get '/memos/:id/edit' do
-  @memo = get_memo(params[:id])
-  @id = params[:id]
   @title = 'edit memo'
+
+  cmd = 'SEL'
+  @memo = db_exec(cmd, params)
   erb :edit
 end
 
 # データ操作
 # 保存ボタン
 post '/memos' do
-  json_data = load_json
-  json_data = {} if json_data.nil?
-  id = calc_max_id
-
-  new_memo = create_memo_hash(params)
-
-  json_data[id] = new_memo
-  File.open('./json/memo.json', 'w') { |file| JSON.dump(json_data, file) }
+  cmd = 'INS'
+  db_exec(cmd, params)
 
   redirect '/'
   erb :index
@@ -54,12 +51,8 @@ end
 
 # 変更ボタン
 patch '/memos/:id' do
-  id = params[:id].to_s
-  json_data = load_json
-  new_memo = create_memo_hash(params)
-  json_data[id] = new_memo
-
-  File.open('./json/memo.json', 'w') { |file| JSON.dump(json_data, file) }
+  cmd = 'UPD'
+  db_exec(cmd, params)
 
   redirect '/'
   erb :index
@@ -67,34 +60,34 @@ end
 
 # 削除ボタン
 delete '/memos/:id' do
-  json_data = load_json
-  json_data.delete(params[:id].to_s)
-
-  File.open('./json/memo.json', 'w') { |file| JSON.dump(json_data, file) }
+  cmd = 'DEL'
+  db_exec(cmd, params)
 
   redirect '/'
   erb :index
 end
 
 # メソッド
-def calc_max_id
-  id = 0
-  json_data = load_json
-  json_data.each { |k, _v| id = k.to_i if id <= k.to_i }
-  (id += 1).to_s
-end
 
-def create_memo_hash(params)
-  { title: params[:title], content: params[:content] }
-end
+def db_exec(cmd, params)
+  connection = PG.connect(host: 'localhost', user: 'sasaco', password: 'sasaco', dbname: 'memodb', port: '5432')
 
-def get_memo(id)
-  json_data = load_json
-  json_data[id]
-end
-
-def load_json
-  File.open('./json/memo.json') { |file| JSON.parse(file.read) }
+  begin
+    case cmd
+    when 'INS'
+      connection.exec('INSERT INTO memos(title,content) VALUES( $1,$2);', [params[:title], params[:content]])
+    when 'UPD'
+      connection.exec('UPDATE memos SET title = $1,content = $2 WHERE id = $3;', [params[:title], params[:content], params[:id]])
+    when 'DEL'
+      connection.exec('DELETE FROM memos WHERE id = $1;', [params[:id]])
+    when 'SEL'
+      connection.exec('SELECT * FROM memos WHERE id = $1;', [params[:id]])
+    when 'SEL_ALL'
+      connection.exec('SELECT * FROM memos;')
+    end
+  ensure
+    connection.finish
+  end
 end
 
 helpers do
