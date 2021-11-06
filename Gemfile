@@ -13,3 +13,5 @@ gem 'sinatra', '~> 2.1'
 gem 'sinatra-contrib', '~> 2.1'
 
 gem 'pg'
+
+gem 'dotenv'
