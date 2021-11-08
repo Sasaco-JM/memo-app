@@ -9,8 +9,8 @@ require 'dotenv/load'
 # ページ表示
 get '/' do
   @title = 'Top'
-  @connection = PG.connect(host: ENV['DATABASE_HOST'], user: ENV['DATABASE_USER'], password: ENV['DATABASE_PASSWORD'], dbname: ENV['DATABASE_NAME'],
-                           port: ENV['DATABASE_PORT'])
+  connection
+
   begin
     @memos = select_all_memo(params)
   ensure
@@ -27,8 +27,8 @@ end
 
 get '/memos/:id' do
   @title = 'show memo'
-  @connection = PG.connect(host: ENV['DATABASE_HOST'], user: ENV['DATABASE_USER'], password: ENV['DATABASE_PASSWORD'], dbname: ENV['DATABASE_NAME'],
-                           port: ENV['DATABASE_PORT'])
+  connection
+
   begin
     @memo = select_memo(params)
   ensure
@@ -40,8 +40,8 @@ end
 # 編集ボタン
 get '/memos/:id/edit' do
   @title = 'edit memo'
-  @connection = PG.connect(host: ENV['DATABASE_HOST'], user: ENV['DATABASE_USER'], password: ENV['DATABASE_PASSWORD'], dbname: ENV['DATABASE_NAME'],
-                           port: ENV['DATABASE_PORT'])
+  connection
+
   begin
     @memo = select_memo(params)
   ensure
@@ -53,8 +53,8 @@ end
 # データ操作
 # 保存ボタン
 post '/memos' do
-  @connection = PG.connect(host: ENV['DATABASE_HOST'], user: ENV['DATABASE_USER'], password: ENV['DATABASE_PASSWORD'], dbname: ENV['DATABASE_NAME'],
-                           port: ENV['DATABASE_PORT'])
+  connection
+
   begin
     insert_memo(params)
   ensure
@@ -66,8 +66,8 @@ end
 
 # 変更ボタン
 patch '/memos/:id' do
-  @connection = PG.connect(host: ENV['DATABASE_HOST'], user: ENV['DATABASE_USER'], password: ENV['DATABASE_PASSWORD'], dbname: ENV['DATABASE_NAME'],
-                           port: ENV['DATABASE_PORT'])
+  connection
+
   begin
     update_memo(params)
   ensure
@@ -79,8 +79,8 @@ end
 
 # 削除ボタン
 delete '/memos/:id' do
-  @connection = PG.connect(host: ENV['DATABASE_HOST'], user: ENV['DATABASE_USER'], password: ENV['DATABASE_PASSWORD'], dbname: ENV['DATABASE_NAME'],
-                           port: ENV['DATABASE_PORT'])
+  connection
+
   begin
     delete_memo(params)
   ensure
@@ -110,6 +110,11 @@ end
 
 def select_all_memo(_params)
   @connection.exec('SELECT * FROM memos;')
+end
+
+def connection
+  @connection ||= PG.connect(host: ENV['DATABASE_HOST'], user: ENV['DATABASE_USER'], password: ENV['DATABASE_PASSWORD'], dbname: ENV['DATABASE_NAME'],
+                             port: ENV['DATABASE_PORT'])
 end
 
 helpers do
