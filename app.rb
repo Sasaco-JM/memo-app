@@ -10,12 +10,9 @@ require 'dotenv/load'
 get '/' do
   @title = 'Top'
   connection
+  @memos = select_all_memo(params)
+  @connection.finish
 
-  begin
-    @memos = select_all_memo(params)
-  ensure
-    @connection.finish
-  end
   erb :index
 end
 
@@ -28,12 +25,9 @@ end
 get '/memos/:id' do
   @title = 'show memo'
   connection
+  @memo = select_memo(params)
+  @connection.finish
 
-  begin
-    @memo = select_memo(params)
-  ensure
-    @connection.finish
-  end
   erb :detail
 end
 
@@ -41,12 +35,9 @@ end
 get '/memos/:id/edit' do
   @title = 'edit memo'
   connection
+  @memo = select_memo(params)
+  @connection.finish
 
-  begin
-    @memo = select_memo(params)
-  ensure
-    @connection.finish
-  end
   erb :edit
 end
 
@@ -54,12 +45,9 @@ end
 # 保存ボタン
 post '/memos' do
   connection
+  insert_memo(params)
+  @connection.finish
 
-  begin
-    insert_memo(params)
-  ensure
-    @connection.finish
-  end
   redirect '/'
   erb :index
 end
@@ -67,12 +55,9 @@ end
 # 変更ボタン
 patch '/memos/:id' do
   connection
+  update_memo(params)
+  @connection.finish
 
-  begin
-    update_memo(params)
-  ensure
-    @connection.finish
-  end
   redirect '/'
   erb :index
 end
@@ -80,12 +65,9 @@ end
 # 削除ボタン
 delete '/memos/:id' do
   connection
+  delete_memo(params)
+  @connection.finish
 
-  begin
-    delete_memo(params)
-  ensure
-    @connection.finish
-  end
   redirect '/'
   erb :index
 end
